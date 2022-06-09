@@ -1,0 +1,1 @@
+console.log([{name: "david"}, {name: "david"}]);
