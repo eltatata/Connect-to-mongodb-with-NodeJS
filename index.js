@@ -1,4 +1,5 @@
 const express = require("express");
+const { create } = require("express-handlebars");
 const app = express();
 const User = require("./models/Users");
 
@@ -10,11 +11,20 @@ require('dotenv').config();
 // leer conexion a la base de datos
 require("./database/db");
 
+// lineas de configuracion de express handlebars
+const hbs = create({
+    extname: ".hbs",
+    partialsDir: ["views/components"]
+});
+
+app.engine(".hbs", hbs.engine);
+app.set("view engine", ".hbs");
+app.set("views", "./views");
+
 // middleware public
 // app.use(express.static("public"));
 
 app.get("/", async (req, res) => {
-    res.send("Hello World");
     try {
         // obtner el array con todos los usuarios
         const users = await User.find().lean();
@@ -22,10 +32,13 @@ app.get("/", async (req, res) => {
         // for para mostrar cada usuario
         for (let i = 0; i < users.length; i++) {
             // imprimir los datos de los usuarios
-            console.log(users[i]);  
+            console.log(users[i]);
+            // renderizar la vista
         }
+
+        res.render("home", { users: users });
     } catch (err) {
-        console.log(err);
+        console.log("ERROR: ".red + err);
     }
 });
 

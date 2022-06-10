@@ -1,1 +1,1 @@
-console.log([{name: "david"}, {name: "david"}]);
+console.log("javcript frontend");
